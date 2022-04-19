@@ -1,12 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>前言</title>
-    <url>/2022/02/07/%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>First<br>很早之前就开始尝试自己搭建博客，但总是卡在<code>hexo init</code>就失败了，直到昨天才成功做出一个雏形，但又觉得不满意，就重新做了一遍，到现在终于初步成功了！<br>.<br>.<br>.</p>
+    <title>信息泄漏</title>
+    <url>/2022/04/19/CTF-STUDY/CTF-STUDY/</url>
+    <content><![CDATA[<p>该篇是有关信息泄露的部分，记录的不是很全，后续会继续补充。</p>
 <span id="more"></span>
-<p>.<br>.<br>.<br>.<br>.</p>
-<p>.<br>.<br>..<br>.<br>.<br>.<br>.</p>
+
+<h3 id="1-Robots文件信息泄漏"><a href="#1-Robots文件信息泄漏" class="headerlink" title="1.Robots文件信息泄漏"></a>1.Robots文件信息泄漏</h3><p>描述：</p>
+<p>搜索引擎可以通过robots文件可以获知哪些网页可以爬取，哪些网页不可以爬取。Robots协议是网站国际互联网界通行的道德规范，其目的是保护网站数据和敏感信息、确保用户个人信息和隐私不被侵犯。</p>
+<p>robots.txt语句</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Disallow：/ABC/ </span><br></pre></td></tr></table></figure>
+
+<p>禁止爬寻ABC目录下面的目录</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Disallow：/cgi-bin/*.html </span><br></pre></td></tr></table></figure>
+
+<p>禁止访问&#x2F;cgi-bin&#x2F;目录下的所有以“.html”为后缀的URL（包括子目录）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Disallow:/*?*</span><br></pre></td></tr></table></figure>
+
+<p>禁止访问网站中所有包含？的网站</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Disallow:/.jpg$</span><br></pre></td></tr></table></figure>
+
+<p>禁止抓取网页所有的.jpg格式的图片</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Allow:.htm$</span><br></pre></td></tr></table></figure>
+
+<p>允许访问以“.htm”为后缀的URL</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Allow:.gif$</span><br></pre></td></tr></table></figure>
+
+<p>允许抓取网页和gif格式图片</p>
+<p>文件用法：</p>
+<p>例1：禁止所有搜索引擎访问网站的任何部分</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Disallow: /</span><br></pre></td></tr></table></figure>
+
+<p>例2：允许所有的robot访问</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">User-agent: *</span><br><span class="line">Allow: /</span><br></pre></td></tr></table></figure>
+
+<p>例3：禁止某个搜索引擎的访问</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">User-agent: BadBot</span><br><span class="line">Disallow: /</span><br></pre></td></tr></table></figure>
+
+<p>例4：允许某个搜索引擎访问：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">User-agent: Baiduspider</span><br><span class="line">allow: /</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-phps源码泄漏"><a href="#2-phps源码泄漏" class="headerlink" title="2.phps源码泄漏"></a>2.phps源码泄漏</h3><p>描述：phps即为PHP Source，是最通用的关联应用程序。</p>
+<p>phps文件就是php的源代码文件，通常用于提供给用户（访问者）查看PHP代码，因为用户无法直接通过web浏览器看到php文件的内容，所以需要phps文件代替。</p>
+<h3 id="3-网站备份压缩文件"><a href="#3-网站备份压缩文件" class="headerlink" title="3.网站备份压缩文件"></a>3.网站备份压缩文件</h3><p>.zip .tar.gz  .rar .7z等，可利用御剑扫描</p>
+<h3 id="4-git泄漏（版本控制系统）"><a href="#4-git泄漏（版本控制系统）" class="headerlink" title="4.git泄漏（版本控制系统）"></a>4.git泄漏（版本控制系统）</h3><p>原理：</p>
+<ul>
+<li>开发人员在开发时，常常会先把源码提交到远程托管网站（如GitHub），最后再从远程托管网站把源码pull到服务器的web目录下，如果忘记把.git文件删除，就造成此漏洞。利用.git文件恢复网站的源码，而源码里可能会有数据可的信息。</li>
+<li>当前大量开发人员使用git进行版本控制，对站点自动部署。如果配置不当，可能会将.git文件夹直接部署到线上环境，这就引起了git泄漏漏洞。</li>
+</ul>
+<p>Git仓库介绍：Git是一个开源的分布式版本控制系统，可以有效、高速地处理从很小到非常大的项目版本管理。</p>
+<p>如何利用？</p>
+<p>（1）GitHack是一个.git泄漏利用脚本，通过泄漏的.git文件夹下的文件，还原重建工程源代码。</p>
+<p>   脚本工作原理：</p>
+<ol>
+<li>解析.git&#x2F;index文件，找到工程中所有的（文件名，文件sha1）。</li>
+<li>去.git&#x2F;objects&#x2F;文件夹下载对应文件。</li>
+<li>zlib解压文件，按原始的目录结构写入源代码。</li>
+</ol>
+<p>（2）爬虫爬取git目录。</p>
+<p>   具体利用思路：</p>
+<ol>
+<li>利用爬虫递归下载.git目录的所有文件</li>
+<li>利用git命令对网站的commit历史进行查看</li>
+<li>利用git命令对网站源码进行恢复</li>
+</ol>
+<h3 id="5-svn泄漏"><a href="#5-svn泄漏" class="headerlink" title="5.svn泄漏"></a>5.svn泄漏</h3><p>描述：</p>
+<p>​        SVN是源代码版本管理软件，造成SVN源代码漏洞的主要原因是管理员操作不规范将SVN隐藏文件夹暴露于外网环境，可以利用.svn&#x2F;entries或wc.db文件获取服务器源码等信息。</p>
+<p>​        SVN1.6及以前版本会在项目的每个文件夹下都生产一个.svn1文件夹，里面包含了所有文件的备份，文件名为.svn&#x2F;text-base&#x2F;文件名.svn-base。</p>
+<p>​        SVN1.7及以后版本则只在项目根目录生成一个.svn文件夹，里面的pristine文件夹里包含了整个项目的所有文件备份。</p>
+<h3 id="6-vim缓存信息泄漏"><a href="#6-vim缓存信息泄漏" class="headerlink" title="6.vim缓存信息泄漏"></a>6.vim缓存信息泄漏</h3><p><strong>原理</strong>：vim在编辑文档的过程中如果异常退出，会产生缓存文件，第一次产生的缓存文件后缀为.swp,后面会产生.swo(查找.index.php.swp)</p>
+<h3 id="7-cookie泄漏"><a href="#7-cookie泄漏" class="headerlink" title="7.cookie泄漏"></a>7.cookie泄漏</h3><p><strong>描述</strong>：cookie的属性设置不当可能会造成系统用户安全隐患，cookie信息泄露是cookie httponly配置缺陷引起的，在设置cookie时，可以设置的一个属性，该cookie值可以被页面脚本读取。</p>
+<p>初级题目解决方案：通过bp抓包</p>
+<h3 id="8-探针泄漏"><a href="#8-探针泄漏" class="headerlink" title="8.探针泄漏"></a>8.探针泄漏</h3><ul>
+<li><p><em><strong>php探针介绍</strong></em> </p>
+<p>描述：php探针是用来探测空间、服务器运行状况和php信息用的，探针可以实时查看服务器硬盘资源、内存占用、网卡流量、系统负载、服务器时间等信息。</p>
+<p>功能：</p>
+<ol>
+<li>服务器环境探测：CPU、在线时间、内存使用状况、系统平均负载探测（支持Linux、FreeBSD系统，需系统支持），操作系统、服务器域名、IP地址、解释引擎等；</li>
+<li>PHP基本特征探测：版本、运行方式、安全模式及常规参数；</li>
+<li>PHP组件支持探测：mysql、GDXML、SESSION、SOCKET等组件支持情况；</li>
+<li>服务器性能检测：整数运算能力、浮点数运算能力、数据IO能力；</li>
+<li>自定义探测：mysql连接测试、MAIL发信测试、函数支持情况及PHP配置参数。</li>
+</ol>
+</li>
+<li><p><em><strong>雅黑探针使用方法</strong></em></p>
+<ol>
+<li>下载到本地电脑，再用ftp软件上传到网站任意目录中。绑定域名后，可以用类似域名&#x2F;tz.php这类网址访问。</li>
+<li>直接用Linux命令行下载到服务器中，解压缩后使用。命令如下：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cd /home/wwwroot/example.com</span><br><span class="line">wget http://www.yahei.net/tz/tz.zip</span><br><span class="line">unzip tz.zip</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="phpinfo信息利用："><a href="#phpinfo信息利用：" class="headerlink" title="phpinfo信息利用："></a>phpinfo信息利用：</h5><ul>
+<li><p>基础信息</p>
+<ol>
+<li>system info:提供详细的操作系统信息，为提权做准备。</li>
+<li>extension_dir:php扩展的路径</li>
+<li>$_SERVER[‘HTTP_HOST’]:网站真实IP</li>
+<li>$_SERVER[‘DOCUMENT_ROOT’]：web根目录</li>
+<li>临时文件路径</li>
+</ol>
+</li>
+<li><p>重要配置</p>
+<ol>
+<li>allow_url_include:远程文件包含；</li>
+<li>disable_functions:表示禁用的函数名；</li>
+<li>asp_tags:php标签有四种形式，如果这个选项不开启的话（一般默认不开启），使用asp的标签是不会被解析的。</li>
+<li>short_open_tag:允许<??>这种形式，并且&lt;?&#x3D;等价于&lt;? echo</li>
+<li>enable_dl:利用扩展库绕过disable_functions，需要使用dl（）并且开启这个选项；</li>
+<li>magic_quotes_gpc:它是用来实现addslshes()和stripslashes()这两个功能的，对sql注入进行防御；</li>
+<li>open_basedir:将用户可操作的文件限制在某目录下，但是这个限制是可以绕过的。</li>
+</ol>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CTF_STUDY</category>
+      </categories>
+      <tags>
+        <tag>CTF入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>前言</title>
+    <url>/2022/02/07/daily/first/</url>
+    <content><![CDATA[<p>I’m saber</p>
+<span id="more"></span>
+
+<p>​       博客终于搭建起来了，虽然还有很多不足，但基本功能都已经实现了，之后会不断完善的。</p>
+<p>​        加入团队后发现自己真的很弱，会在这条路上一直学习下去，向各位师傅看齐。</p>
 ]]></content>
       <categories>
         <category>日常</category>
